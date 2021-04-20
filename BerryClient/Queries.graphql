@@ -1,0 +1,12 @@
+query GetProducts {
+  products {
+    name,
+    description,
+    status,
+    uOM,
+    brandId,
+    Brand{
+      name
+    }
+  }
+}

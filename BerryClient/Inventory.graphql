@@ -1,0 +1,70 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Query {
+  node(id: ID!): Node
+  products: [Product!]!
+  product(id: ID!): Product!
+  brands: [Brand!]!
+  brand(id: ID!): Brand!
+}
+
+type Mutation {
+  addProduct(input: AddProductInput!): AddProductPayload!
+  addBrand(input: AddBrandInput!): AddBrandPayload!
+}
+
+type Subscription {
+  onProductCreated: Product!
+}
+
+type Product implements Node {
+  id: ID!
+  Brand: Brand
+  name: String
+  description: String
+  uOM: String
+  status: String
+  brandId: Int!
+}
+
+type Brand implements Node {
+  id: ID!
+  Products: [Product]
+  name: String
+}
+
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+  id: ID!
+}
+
+input AddBrandInput {
+  name: String
+}
+
+type AddBrandPayload {
+  brand: Brand
+  errors: [UserError!]
+}
+
+input AddProductInput {
+  name: String!
+  description: String
+  uom: String
+  status: String
+  brandId: Int!
+}
+
+type AddProductPayload {
+  product: Product
+  errors: [UserError!]
+}
+
+type UserError {
+  message: String!
+  code: String!
+}
