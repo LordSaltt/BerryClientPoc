@@ -8,18 +8,17 @@ namespace BerryClient.Services
 {
     public class ProductsService
     {
+        private readonly IInventoryClient _client;
+
+        public ProductsService(IInventoryClient client)
+        {
+            _client = client;
+        }
+
+
         public async Task<List<IProduct>> GetProducts()
         {
-            var serviceCollection = new ServiceCollection();
-                //serviceCollection.AddDefaultScalarSerializers();
-                serviceCollection.AddInventoryClient();
-                serviceCollection.AddHttpClient("InventoryClient")
-                    .ConfigureHttpClient(client =>
-                        client.BaseAddress = new Uri("http://localhost:3000/graphql"));
-                IServiceProvider services = serviceCollection.BuildServiceProvider();
-                var client = services.GetRequiredService<IInventoryClient>();
-            
-            var result = await client.GetProductsAsync();            
+            var result = await _client.GetProductsAsync();
 
             return result.Data.Products.ToList();
         }
