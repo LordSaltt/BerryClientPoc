@@ -15,7 +15,8 @@ namespace BerryClient
             string status, 
             string uOM, 
             int brandId, 
-            global::BerryClient.IBrand brand)
+            global::BerryClient.IBrand brand, 
+            global::BerryClient.ICategory category)
         {
             Name = name;
             Description = description;
@@ -23,6 +24,7 @@ namespace BerryClient
             UOM = uOM;
             BrandId = brandId;
             Brand = brand;
+            Category = category;
         }
 
         public string Name { get; }
@@ -36,5 +38,7 @@ namespace BerryClient
         public int BrandId { get; }
 
         public global::BerryClient.IBrand Brand { get; }
+
+        public global::BerryClient.ICategory Category { get; }
     }
 }

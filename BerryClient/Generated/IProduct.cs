@@ -19,5 +19,7 @@ namespace BerryClient
         int BrandId { get; }
 
         global::BerryClient.IBrand Brand { get; }
+
+        global::BerryClient.ICategory Category { get; }
     }
 }

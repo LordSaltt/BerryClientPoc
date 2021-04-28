@@ -10,11 +10,16 @@ type Query {
   product(id: ID!): Product!
   brands: [Brand!]!
   brand(id: ID!): Brand!
+  categories: [Category!]!
+  category(id: ID!): Category!
+  users: [User!]!
 }
 
 type Mutation {
   addProduct(input: AddProductInput!): AddProductPayload!
   addBrand(input: AddBrandInput!): AddBrandPayload!
+  addCategory(input: AddCategoryInput!): AddCategoryPayload!
+  login(input: LoginInput!): LoginPayload!
 }
 
 type Subscription {
@@ -24,11 +29,14 @@ type Subscription {
 type Product implements Node {
   id: ID!
   Brand: Brand
+  Category: Category
   name: String
   description: String
   uOM: String
   status: String
   brandId: Int!
+  categoryId: Int!
+  suplierProducts: [SupplierProduct!]!
 }
 
 type Brand implements Node {
@@ -37,9 +45,66 @@ type Brand implements Node {
   name: String
 }
 
+type Category implements Node {
+  id: ID!
+  Products: [Product]
+  name: String
+}
+
+type User {
+  userName: String
+  id: Int!
+  password: String
+  email: String
+  phone: String
+}
+
 "The node interface is implemented by entities that have a global unique identifier."
 interface Node {
   id: ID!
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+}
+
+type SupplierProduct {
+  id: Int!
+  supplierId: Int!
+  supplier: Supplier
+  productId: Int!
+  product: Product
+}
+
+type Supplier {
+  id: Int!
+  name: String
+  address: String
+  phone: String
+  contact: String
+  email: String
+  comments: String
+  supplierProducts: [SupplierProduct!]!
+}
+
+input LoginInput {
+  email: String
+  password: String
+}
+
+type LoginPayload {
+  login: String
+  errors: [UserError!]
+}
+
+input AddCategoryInput {
+  name: String
+}
+
+type AddCategoryPayload {
+  category: Category
+  errors: [UserError!]
 }
 
 input AddBrandInput {
@@ -57,6 +122,7 @@ input AddProductInput {
   uom: String
   status: String
   brandId: Int!
+  categoryId: Int!
 }
 
 type AddProductPayload {
@@ -68,3 +134,5 @@ type UserError {
   message: String!
   code: String!
 }
+
+directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the resolver shall be executed.By default the resolver is executed after the policy has determined that the current user is allowed to access the field." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on SCHEMA | OBJECT | FIELD_DEFINITION

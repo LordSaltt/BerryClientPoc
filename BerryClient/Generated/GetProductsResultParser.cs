@@ -54,7 +54,8 @@ namespace BerryClient
                     DeserializeNullableString(element, "status"),
                     DeserializeNullableString(element, "uOM"),
                     DeserializeInt(element, "brandId"),
-                    ParseGetProductsProductsBrand(element, "Brand")
+                    ParseGetProductsProductsBrand(element, "Brand"),
+                    ParseGetProductsProductsCategory(element, "Category")
                 );
 
             }
@@ -77,6 +78,26 @@ namespace BerryClient
             }
 
             return new Brand
+            (
+                DeserializeNullableString(obj, "name")
+            );
+        }
+
+        private global::BerryClient.ICategory ParseGetProductsProductsCategory(
+            JsonElement parent,
+            string field)
+        {
+            if (!parent.TryGetProperty(field, out JsonElement obj))
+            {
+                return null;
+            }
+
+            if (obj.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            return new Category
             (
                 DeserializeNullableString(obj, "name")
             );
